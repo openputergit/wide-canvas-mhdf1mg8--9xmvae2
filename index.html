@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Blue Brick Wall</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .brick-wall {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+            background-size: 50px 25px;
+            background-color: #4a90a0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brick {
+            transform-origin: center;
+            transition: all 0.3s ease;
+        }
+
+        .brick:hover {
+            transform: scale(1.1);
+            filter: brightness(110%);
+            z-index: 10;
+        }
+
+        @media (max-width: 640px) {
+            .brick-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-100">
+    <div class="container mx-auto p-4">
+        <div class="brick-wall rounded-lg shadow-lg p-8 min-h-[80vh]">
+            <div class="grid brick-container grid-cols-4 gap-4 md:grid-cols-6 lg:grid-cols-8">
+                <!-- Bricks will be dynamically generated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createBrickWall() {
+            const container = document.querySelector('.brick-container');
+            const numberOfBricks = 48; // Adjustable number of bricks
+
+            for (let i = 0; i < numberOfBricks; i++) {
+                const brick = document.createElement('div');
+                brick.className = 'brick aspect-[2/1] rounded-sm cursor-pointer';
+                brick.style.backgroundColor = `hsl(${190 + Math.random() * 20}, ${60 + Math.random() * 20}%, ${40 + Math.random() * 20}%)`;
+                
+                brick.addEventListener('click', () => {
+                    const newColor = `hsl(${190 + Math.random() * 20}, ${60 + Math.random() * 20}%, ${40 + Math.random() * 20}%)`;
+                    brick.style.backgroundColor = newColor;
+                });
+
+                container.appendChild(brick);
+            }
+        }
+
+        // Add touch events for mobile
+        document.addEventListener('touchstart', function(e) {
+            if (e.target.classList.contains('brick')) {
+                const newColor = `hsl(${190 + Math.random() * 20}, ${60 + Math.random() * 20}%, ${40 + Math.random() * 20}%)`;
+                e.target.style.backgroundColor = newColor;
+            }
+        }, false);
+
+        // Initialize the wall
+        createBrickWall();
+
+        // Make it responsive to window resize
+        window.addEventListener('resize', () => {
+            const container = document.querySelector('.brick-container');
+            container.innerHTML = '';
+            createBrickWall();
+        });
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
